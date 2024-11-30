@@ -1,7 +1,7 @@
 # E-CAR
 This is an application designed for car sell management .
 ### 1-Landing page
-There is a landing page where a lambda user can :
+This allow any user to  :
 * find car list 
 * filter cars by brand,color,motor type
 * see car details and take an appointment if interested
@@ -12,13 +12,13 @@ There is a landing page where a lambda user can :
 This is a secured page that is only available for athenticated admin. 
 
 In this page ,the admin can:
-* the add a sub admin
+* Add a sub admin
 
 * Validate or reject appointment made by 
 users 
-* Add new car (that will be available into the landing page)
+* Add new car (which will appear  on the landing page)
 
-* Delete car on the list when it's not available anymore
+* Delete car on the list when they are no longer available 
 
 
 #### user:
