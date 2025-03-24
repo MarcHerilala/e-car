@@ -1,12 +1,8 @@
 "use server"
 import Footer from "@/components/footer";
 import Nav from "@/components/nav";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { GetServerSideProps } from "next";
- 
-import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
   CarouselContent,
@@ -18,167 +14,171 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button";
 import { NewApointmentForm } from "@/components/newAppointmentForm";
-import {urlBase} from "@/utils/urlBase";
-
-import {get} from "@/utils/apiUtils";
 import { fetchCarById } from "@/utils/carHelper";
 
 type Car = {
-    id:string,
+    id: string,
     model: string,
     price: number,
     motorType: string,
     power: number,
-    color:string,
-    placeNumber:number,
-    description:string,
+    color: string,
+    placeNumber: number,
+    description: string,
     pics: string[]
-    
 }
+
 type CarPageProps = {
   params: {
     id: string;
   };
 };
 
-const page = async ({params}:CarPageProps) => {
-    const car: Car = await fetchCarById(params.id)||{};
-
-
+const page = async ({params}: CarPageProps) => {
+  const car: Car = await fetchCarById(params.id) || {};
 
   return (
-    <>
-      <Nav/>
-      <main className="container mx-auto my-4">
-        <div className="flex gap-1 text-sm font-semibold text-slate-700">
-          <Link href="/" passHref>
-            Home{" "}
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <Nav />
+      <main className="container mx-auto px-4 py-12">
+        <nav className="flex items-center space-x-3 text-sm mb-12">
+          <Link 
+            href="/" 
+            className="text-gray-600 hover:text-primary transition-colors duration-200"
+          >
+            Home
           </Link>
-          /
-          <Link href="/new" className="underline">
-            News & actualities
+          <span className="text-gray-400">/</span>
+          <Link 
+            href="/cars" 
+            className="text-gray-600 hover:text-primary transition-colors duration-200"
+          >
+            Cars
           </Link>
-        </div>
+          <span className="text-gray-400">/</span>
+          <span className="text-primary font-medium">{car.model}</span>
+        </nav>
 
-        <div className="my-8">
-          <h1 className="text-2xl font-semibold text-slate-800">
-            News & actualities
-          </h1>
-          <p className="text-sm text-slate-700">
-            The latest car news, videos and expert reviews, from Cars.com&apos;s
-            independent automotive journalists
-            <br />
-          </p>
-        </div>
+        <div className="grid lg:grid-cols-3 gap-16">
+          <div className="lg:col-span-2 space-y-10">
+            <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {car.pics?.map((pic, index) => (
+                    <CarouselItem key={index}>
+                      <div className="relative aspect-[16/9] overflow-hidden">
+                        <img 
+                          src={pic} 
+                          alt={`${car.model} - View ${index + 1}`}
+                          className="object-cover w-full h-full transform hover:scale-105 transition-transform duration-700 ease-out"
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="-left-3 h-12 w-12 opacity-70 hover:opacity-100 transition-opacity" />
+                <CarouselNext className="-right-3 h-12 w-12 opacity-70 hover:opacity-100 transition-opacity" />
+              </Carousel>
+            </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 border">
-          <div className="col-span-3 mr-10">
-            <h2 className="text-xl font-semibold text-slate-700">
-              {car.model}
-            </h2>
+            <div className="bg-white rounded-3xl shadow-lg p-10 space-y-8">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-4xl font-bold text-gray-900 mb-2">{car.model}</h1>
+                  <p className="text-lg text-primary font-semibold">
+                    Starting from ${car.price?.toLocaleString()}
+                  </p>
+                </div>
+                <div className="px-6 py-3 bg-primary/10 rounded-full">
+                  <span className="text-primary font-semibold">
+                    Available Now
+                  </span>
+                </div>
+              </div>
 
-            <div className="relative">
-              <div className="absolute bottom-[50%]">
-                <p className="text-[6rem] text-slate-400" aria-hidden="true">
-                  ix2
-                </p>
-                <p className="" aria-hidden="true"></p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div className="p-6 bg-gray-50 rounded-2xl text-center hover:bg-gray-100 transition-colors duration-200">
+                  <div className="text-3xl font-bold text-primary mb-2">{car.power}</div>
+                  <div className="text-sm text-gray-600">Horsepower</div>
+                </div>
+                <div className="p-6 bg-gray-50 rounded-2xl text-center hover:bg-gray-100 transition-colors duration-200">
+                  <div className="text-3xl font-bold text-primary mb-2">{car.motorType}</div>
+                  <div className="text-sm text-gray-600">Engine Type</div>
+                </div>
+                <div className="p-6 bg-gray-50 rounded-2xl text-center hover:bg-gray-100 transition-colors duration-200">
+                  <div className="text-3xl font-bold text-primary mb-2">{car.placeNumber}</div>
+                  <div className="text-sm text-gray-600">Seats</div>
+                </div>
+                <div className="p-6 bg-gray-50 rounded-2xl text-center hover:bg-gray-100 transition-colors duration-200">
+                  <div className="text-3xl font-bold text-primary mb-2">{car.color}</div>
+                  <div className="text-sm text-gray-600">Color</div>
+                </div>
               </div>
 
               <div>
-               
-                 <Carousel className="w-full max-w-[600px]">
-                    <CarouselContent>
-                      {car.pics&&car.pics.map((pic,index) => (
-                      <CarouselItem key={index}>
-                        <div className="p-1">
-                          <Card>
-                            <CardContent className="flex aspect-square items-center justify-center p-6">
-                              <span className="text-4xl font-semibold w-full h-full"> 
-                                {
-                                  <img src={pic} className="w-full h-full" />
-                                
-                                }
-                               
-                                </span>
-                            </CardContent>
-                        
-
-                          </Card>
-                         </div>
-                      </CarouselItem>
-                      
-                             ))}
-                    </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                 </Carousel>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Overview</h2>
+                <p className="text-gray-600 leading-relaxed text-lg">
+                  {car.description}
+                </p>
               </div>
             </div>
+          </div>
 
-            <div>
-               {
-                car.description
-               }
-            
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-3xl shadow-lg p-8 sticky top-8">
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Schedule Test Drive</h2>
+                  <p className="text-gray-600 mt-2">Experience the power and luxury firsthand</p>
+                </div>
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button 
+                      className="w-full text-lg py-6 bg-primary hover:bg-primary/90 transition-colors duration-200" 
+                      size="lg"
+                    >
+                      Book Your Test Drive
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                      <DialogTitle>Schedule Your Test Drive</DialogTitle>
+                      <DialogDescription>
+                        Experience the {car.model} firsthand. Fill out the form below to schedule your test drive.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <NewApointmentForm idCar={car.id} />
+                  </DialogContent>
+                </Dialog>
+
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                    <p className="text-gray-700">Free cancellation</p>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                    <p className="text-gray-700">Expert consultation included</p>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                    <p className="text-gray-700">No purchase obligation</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          {/* --- */}
-          <div className="col-span-1">
-              <div className="text-3xl flex flex-col gap-7 mt-24">
-                    
-                    <div className="flex flex-row gap-1 items-center">
-                      <div className="font-semibold">price:</div>
-                      <div className=" text-slate-700">{car.price}$</div>
-                    </div>
-                   <div className="flex flex-row gap-1 items-center">
-                      <div className="font-semibold">motor type:</div>
-                      <div className=" text-slate-700">{car.motorType}</div>
-                    </div>
-                    <div className="flex flex-row gap-1 items-center">
-                      <div className="font-semibold">power:</div>
-                      <div className=" text-slate-700">{car.power}</div>
-                    </div>
-                    <div className="flex flex-row gap-1 items-center">
-                      <div className="font-semibold">place number:</div>
-                      <div className=" text-slate-700">{car.placeNumber}</div>
-                    </div>
-                    <div className="flex flex-row gap-1 items-center">
-                      <div className="font-semibold">color:</div>
-                      <div className=" text-slate-700">{car.color}</div>
-                    </div>
-                     <Dialog>
-      <DialogTrigger asChild>
-        <Button className="text-2xl mt-8" >appointment</Button>
-      </DialogTrigger>
-      <DialogContent className="">
-        <DialogHeader>
-          <DialogTitle>make an appointment</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you&apos;re done.
-          </DialogDescription>
-        </DialogHeader>
-      
-        <NewApointmentForm idCar={car.id} />
-      </DialogContent>
-    </Dialog>
-                    
-                </div>
-                
-          </div>
-          
         </div>
       </main>
-
       <Footer />
-    </>
+    </div>
   );
 };
 
