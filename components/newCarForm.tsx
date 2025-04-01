@@ -63,7 +63,7 @@ export function NewCarForm() {
 
   async function handleRevalidate() {
   try {
-    const response = await fetch("/api/revalidate", {
+    const response = await fetch("https://e-car-gamma.vercel.app/api/revalidate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ tag: "cars" }), // Remplace "cars" par ton tag
