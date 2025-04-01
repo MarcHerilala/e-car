@@ -21,6 +21,18 @@ export async function fetchCarById(id: string){
  }
 
 }
+export const getCars = async () => {
+  const res = await fetch(`${urlBase}/cars`, {
+    next: { tags: ["cars"] }, // Stocke en cache jusqu'à revalidation
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch cars");
+  }
+
+  return res.json();
+};
+
 export async function fetchCarByBrand(brand: string){
  try{
      const res = await fetch(`${urlBase}/cars/${brand}?pageNumber=0`);
