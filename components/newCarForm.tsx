@@ -61,6 +61,22 @@ export function NewCarForm() {
     },
   });
 
+  async function handleRevalidate() {
+  try {
+    const response = await fetch("/api/revalidate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tag: "cars" }), // Remplace "cars" par ton tag
+    });
+
+    const data = await response.json();
+    console.log(data.message); // Afficher la réponse
+  } catch (error) {
+    console.error("Erreur de revalidation :", error);
+  }
+}
+
+
   const dataProvider = useDataProvider();
 
    const handleFile1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +93,7 @@ export function NewCarForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
 try{
+
       setIsloading(true)
    const carResponse= await dataProvider.create("car/new", { data: values });
    const idCar=carResponse.data.id;
@@ -97,6 +114,8 @@ try{
         method: "POST",
         body: formData2,
     })
+
+    handleRevalidate()
 }
      
    }
