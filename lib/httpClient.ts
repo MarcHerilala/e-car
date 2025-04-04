@@ -1,14 +1,18 @@
 import { fetchUtils } from "react-admin";
 import Cookies from "js-cookie";
-export const hhtpClient = (url: string, options: any = {}) => {
+
+export const httpClient = (url: string, options: any = {}) => {
   if (!options.headers) {
     options.headers = new Headers({
       Accept: "application/json",
     });
   }
-  if (localStorage.getItem("token")) {
-    const token = Cookies.get("token");
+
+  const token = Cookies.get("token");
+  if (token) {
     options.headers.set("Authorization", `Bearer ${token}`);
+    console.log("io le token",token)
   }
+
   return fetchUtils.fetchJson(url, options);
 };
